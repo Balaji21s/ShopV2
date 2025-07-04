@@ -1,0 +1,28 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/cart.css">
+</head>
+
+<body>
+<%- include('../includes/navigation.ejs') %>
+
+<main>
+  <h1 class="centered">Checkout</h1>
+
+  <ul class="cart__item-list">
+    <% products.forEach((product) => { %>
+      <li class="cart__item">
+        <h2><%= product.productId.title %></h2>
+        <p>Quantity: <%= product.quantity %></p>
+        <p>Price: ₹<%= product.productId.price %></p>
+      </li>
+    <% }) %>
+  </ul>
+
+  <h2 class="centered">Total Price: ₹<%= totalPrice %></h2>
+
+  <div class="centered">
+    <a href="<%= paymentLink %>" class="btn">Proceed to Pay with Cashfree</a>
+  </div>
+</main>
+
+<%- include('../includes/end.ejs') %>

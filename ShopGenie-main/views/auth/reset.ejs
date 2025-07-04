@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset - Your App</title>
+    <style>
+        /* Password Reset Page Styles with Popup Messages */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Main container */
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Auth card */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Header section */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-title {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .auth-description {
+            color: #718096;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Alert messages */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInDown 0.6s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            color: #c53030;
+            border: 1px solid #fc8181;
+        }
+        
+        /* Form styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .required {
+            color: #e53e3e;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #2d3748;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+        
+        .form-input:focus + .input-icon {
+            color: #667eea;
+        }
+        
+        .form-hint {
+            color: #718096;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        
+        /* Button styling */
+        .form-actions {
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* Footer section */
+        .auth-footer {
+            margin-top: 2rem;
+        }
+        
+        .auth-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        
+        .auth-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        
+        .auth-link:hover {
+            color: #764ba2;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(2px);
+        }
+        
+        .auth-help {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .help-text {
+            color: #718096;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .help-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .help-link:hover {
+            color: #764ba2;
+        }
+        
+        /* POPUP/MODAL STYLES */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .popup-overlay.active .popup-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+        
+        .popup-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .popup-title {
+            color: #2d3748;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .popup-message {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .popup-email {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .popup-email strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .countdown-timer {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+            font-weight: 600;
+            color: #c53030;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .popup-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .popup-actions .btn {
+            flex: 1;
+        }
+        
+        /* Loading animation */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 10px;
+            }
+            
+            .auth-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .auth-title {
+                font-size: 1.5rem;
+            }
+            
+            .auth-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .popup-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .popup-actions {
+                flex-direction: column;
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Password Reset</h1>
+                <p class="auth-description">
+                    Please enter your registered email address. We will send you a secure link to reset your password.
+                </p>
+            </div>
+
+            <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                <div class="alert alert-error" role="alert">
+                    <i class="icon-error">⚠️</i>
+                    <span><%= errorMessage %></span>
+                </div>
+            <% } %>
+
+            <form class="auth-form" method="POST" action="/reset" novalidate>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email" 
+                            class="form-input"
+                            placeholder="Enter your email address"
+                            value="<%= typeof oldInput !== 'undefined' && oldInput ? oldInput.email : '' %>"
+                            required
+                            autocomplete="email"
+                            spellcheck="false"
+                        >
+                        <i class="input-icon icon-email">📧</i>
+                    </div>
+                    <small class="form-hint">We'll never share your email with anyone else.</small>
+                </div>
+
+                <div class="form-actions">
+                    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                    <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                        <i class="btn-icon icon-send">🚀</i>
+                        Send Reset Instructions
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <div class="auth-links">
+                    <a href="/login" class="auth-link">
+                        <i class="icon-arrow-left">←</i>
+                        Back to Sign In
+                    </a>
+                    <a href="/signup" class="auth-link">
+                        Create New Account
+                        <i class="icon-arrow-right">→</i>
+                    </a>
+                </div>
+                
+                <div class="auth-help">
+                    <p class="help-text">
+                        Need help? <a href="/support" class="help-link">Contact Support</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- EMAIL SENT SUCCESS POPUP -->
+    <div id="emailSentPopup" class="popup-overlay <% if (typeof step !== 'undefined' && step === 'confirmed') { %>active<% } %>">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closePopup('emailSentPopup')">&times;</button>
+            
+            <div class="popup-icon">✅</div>
+            <h2 class="popup-title">Email Sent Successfully!</h2>
+            <p class="popup-message">
+                We've sent a password reset link to your email address.
+            </p>
+            
+            <div class="popup-email">
+                <strong><%= typeof email !== 'undefined' ? email : 'your email' %></strong>
+            </div>
+            
+            <div class="countdown-timer">
+                ⏰ Link expires in: <span id="emailTimer">60:00</span>
+            </div>
+            
+            <p class="popup-message" style="font-size: 0.875rem; color: #a0aec0;">
+                Please check your inbox and spam folder. The reset link will expire in 1 hour for security purposes.
+            </p>
+            
+            <div class="popup-actions">
+                <button class="btn btn-secondary" onclick="resendEmail(this)">
+                    🔄 Resend Email
+                </button>
+                <button class="btn btn-primary" onclick="closePopup('emailSentPopup')">
+                    ✨ Got It!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD RESET SUCCESS POPUP -->
+    <div id="resetSuccessPopup" class="popup-overlay <% if (typeof step !== 'undefined' && step === 'reset-success') { %>active<% } %>">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closePopup('resetSuccessPopup')">&times;</button>
+            
+            <div class="popup-icon">🎉</div>
+            <h2 class="popup-title">Password Reset Complete!</h2>
+            <p class="popup-message">
+                Your password has been successfully updated. You can now sign in with your new password.
+            </p>
+            
+            <div class="popup-email" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
+                <strong style="color: #059669;">🔐 Your account is now secure!</strong>
+            </div>
+            
+            <p class="popup-message" style="font-size: 0.875rem; color: #a0aec0;">
+                For your security, you'll need to sign in again with your new password.
+            </p>
+            
+            <div class="popup-actions">
+                <button class="btn btn-primary btn-block" onclick="window.location.href='/login'">
+                    🚀 Sign In Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store step value from server
+        var serverStep = '<%= typeof step !== "undefined" ? step : "" %>';
+        
+        // Popup management functions
+        function showPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close popup when clicking on overlay
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('popup-overlay')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Form submission with popup
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.auth-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = this.querySelector('#submitBtn');
+                    if (submitBtn) {
+                        submitBtn.classList.add('loading');
+                        submitBtn.innerHTML = '<i class="btn-icon">⏳</i> Sending...';
+                    }
+                });
+            }
+
+            // Countdown timer for email expiration
+            const emailTimer = document.getElementById('emailTimer');
+            if (emailTimer) {
+                let timeLeft = 3600; // 1 hour in seconds
+
+                function updateEmailTimer() {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    emailTimer.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                    
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        setTimeout(updateEmailTimer, 1000);
+                    } else {
+                        emailTimer.parentElement.innerHTML = '<span style="color: #e53e3e;">⚠️ Reset link has expired</span>';
+                    }
+                }
+                updateEmailTimer();
+            }
+
+            // Auto-show popups based on server state
+            if (step === 'confirmed') {
+                setTimeout(function() { showPopup('emailSentPopup'); }, 500);
+            }
+            
+            if (step === 'reset-success') {
+                setTimeout(function() { showPopup('resetSuccessPopup'); }, 500);
+            }
+        });
+
+        // Resend email function with popup feedback
+        function resendEmail(btn) {
+            btn.classList.add('loading');
+            btn.innerHTML = '⏳ Sending...';
+            
+            // Simulate API call
+            setTimeout(function() {
+                btn.classList.remove('loading');
+                btn.innerHTML = '✅ Email Sent!';
+                
+                // Reset timer
+                const emailTimer = document.getElementById('emailTimer');
+                if (emailTimer) {
+                    let timeLeft = 3600;
+                    function updateTimer() {
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        emailTimer.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                        
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            setTimeout(updateTimer, 1000);
+                        }
+                    }
+                    updateTimer();
+                }
+                
+                // Show success feedback
+                setTimeout(function() {
+                    btn.innerHTML = '🔄 Resend Email';
+                }, 3000);
+            }, 2000);
+        }
+
+        // Keyboard support for popups
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const activePopup = document.querySelector('.popup-overlay.active');
+                if (activePopup) {
+                    activePopup.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
